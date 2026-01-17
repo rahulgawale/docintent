@@ -1,38 +1,76 @@
-# Agents & Automated Contributions
+# AGENTS.md
 
-This repository contains **DocIntent Core**, a low-level Apex engine for document rendering.
+This repository contains **DocIntent Core**, a low-level Apex document intent engine.
 
-Automated tools, AI agents, and scripted contributions are welcome **only if** they respect the architectural constraints of the project.
+Automated tools, AI agents, and Copilot-assisted contributions are permitted **only** if they respect the architectural and philosophical constraints of the project.
 
-## Non-negotiable rules
+---
 
-- This project is **Apex-only**
-- No LWC, Aura, JavaScript, or frontend tooling
-- No templates, DSLs, or macro languages
-- No implicit data binding or magic context
-- No UI or admin-facing abstractions
+## Scope boundaries
 
-## Architectural intent
-
-DocIntent is built around:
-- streaming rendering
-- explicit structure
+DocIntent Core is strictly limited to:
+- document structure
 - stack-based validation
-- deterministic output
+- rendering orchestration
+- PDF output via Salesforce native APIs
 
-Any contribution that adds:
-- hidden state
-- implicit behavior
-- convenience abstractions that obscure control
+It does not include:
+- UI components
+- template or macro languages
+- admin tooling
+- data fetching or business logic
 
-will be rejected.
+Agents must not introduce abstractions outside this scope.
 
-## How to contribute with agents
+---
 
-AI-generated contributions must:
-- follow existing naming conventions
-- respect package boundaries
-- include Apex tests
-- explain *why* a change exists, not just *what* it does
+## Non-negotiable rules for automated contributions
 
-Correctness and clarity matter more than cleverness.
+AI-generated or assisted changes must not:
+
+- introduce implicit behavior or hidden state
+- weaken determinism or explicit structure
+- bypass stack-based validation
+- soften, suppress, or auto-recover from errors
+- add convenience APIs that obscure intent
+- expand the public API surface without discussion
+
+Violations may result in immediate rejection.
+
+---
+
+## Copilot / AI PR requirements
+
+All PRs that use AI assistance must:
+
+- Explicitly state **“AI-assisted”** in the PR description
+- Clearly explain the **design intent** of the change
+- Avoid over-abstraction or speculative generalization
+- Preserve existing public APIs and error semantics
+- Include Apex tests where behavior changes
+
+AI assistance does not reduce the standard of review.
+
+---
+
+## Forbidden AI actions
+
+AI tools may **not**:
+- introduce new public APIs
+- refactor core architecture
+- change error semantics or validation rules
+
+Such changes require prior discussion and human authorship.
+
+---
+
+## Review & enforcement
+
+All contributions, human or automated, are reviewed under the same standards.
+
+Maintainers may reject changes without extended discussion if:
+- determinism is weakened
+- implicit behavior is introduced
+- scope creep is detected
+
+Correctness and clarity take precedence over convenience.
