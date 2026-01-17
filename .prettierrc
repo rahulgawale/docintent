@@ -1,4 +1,22 @@
 {
   "tabWidth": 2,
-  "useTabs": false
+  "useTabs": false,
+  "plugins": [
+    "prettier-plugin-apex",
+    "@prettier/plugin-xml"
+  ],
+  "overrides": [
+    {
+      "files": "*.{trigger,cls}",
+      "options": {
+        "parser": "apex"
+      }
+    },
+    {
+      "files": "*.{apex}",
+      "options": {
+        "parser": "apex-anonymous"
+      }
+    }
+  ]
 }
