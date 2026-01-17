@@ -15,6 +15,7 @@ DocIntent focuses on one thing:
 > Deterministic document generation in Apex using explicit structure and streaming rendering.
 
 DocIntent is **not**:
+
 - a UI builder
 - a template or macro engine
 - an admin-facing tool
@@ -46,6 +47,7 @@ These constraints are intentional and non-negotiable.
 DocIntent follows a strict package and folder structure. Contributions must respect these boundaries.
 
 ### `api/`
+
 Public, documented entry points and fluent builder APIs.
 
 - Contains only the supported public surface
@@ -54,25 +56,29 @@ Public, documented entry points and fluent builder APIs.
 - No direct rendering logic
 
 Examples:
+
 - `DocIntentDocument`
 - `DocIntentSection`
 
 ---
 
 ### `model/`
+
 Domain and structural concepts.
 
 - Enums and value objects
-- Describes *what exists*, not *how it is rendered*
+- Describes _what exists_, not _how it is rendered_
 - No behavior-heavy logic
 
 Examples:
+
 - `DocIntentNodeType`
 - Style or layout value objects
 
 ---
 
 ### `internal/`
+
 Implementation details and engine internals.
 
 - Stack management
@@ -81,11 +87,13 @@ Implementation details and engine internals.
 - Rendering coordination
 
 Rules:
+
 - Not part of the public API
 - May change without notice
 - Must not be referenced by consumers
 
 Examples:
+
 - `RenderStack`
 - Transition validators
 - Internal state holders
@@ -93,6 +101,7 @@ Examples:
 ---
 
 ### `render/` and `pdf/`
+
 Output-specific rendering logic.
 
 - HTML generation
@@ -137,6 +146,7 @@ No domain rules should live here.
 ## Naming conventions
 
 ### Classes
+
 - All public API classes must be prefixed with DocIntent
 - Internal classes (inside internal) must use plain, meaningful names
 - No generic names such as Utils, Helper, or Manager
@@ -144,9 +154,9 @@ No domain rules should live here.
 ### Methods
 
 - Public fluent builder APIs may use nouns:
-`section()`, `table()`, `row()`, `cell()`
+  `section()`, `table()`, `row()`, `cell()`
 - Imperative or internal methods must be verb-first:
--    `renderSection`, `openTable`, `validateTransition`
+- `renderSection`, `openTable`, `validateTransition`
 
 ### Variables
 
@@ -170,7 +180,7 @@ No domain rules should live here.
 ### Error handling
 
 - Custom exceptions are preferred
-- All exceptions must extend DocIntentException
+- All exceptions must extend RenderException
 - Errors must be thrown immediately when invalid structure is detected
 - No silent recovery, lenient modes, or “best effort” behavior
 
@@ -181,23 +191,24 @@ No domain rules should live here.
 - Behavior tests are mandatory; coverage alone is insufficient
 - Every new public API must include negative tests
 - Tests should assert:
--   structural correctness
--   invalid transitions
--   deterministic ordering
+- structural correctness
+- invalid transitions
+- deterministic ordering
 
 ### Pull request hygiene
 
 - One concern per pull request (strictly enforced)
 - Small, focused commits are preferred
 - Refactors are allowed only if:
--   behavior is unchanged
--   tests prove equivalence
+- behavior is unchanged
+- tests prove equivalence
 
 Large or mixed-scope PRs may be rejected without partial review.
 
 ## Philosophy
 
 DocIntent values:
+
 - clarity over cleverness
 - correctness over flexibility
 - long-term maintainability over short-term convenience

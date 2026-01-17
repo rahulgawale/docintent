@@ -1,7 +1,7 @@
 {
   "name": "docintent",
   "private": true,
-  "version": "0.0.1",
+  "version": "v0.1.0-alpha",
   "description": "An open-source Apex document intent engine for deterministic PDF generation on Salesforce.",
   "scripts": {
     "prettier": "prettier --write \"**/*.{cls,cmp,component,css,html,json,md,page,trigger,xml,yaml,yml}\"",
