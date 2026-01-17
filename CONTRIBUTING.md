@@ -41,6 +41,76 @@ These constraints are intentional and non-negotiable.
 
 ---
 
+## Folder structure guidelines
+
+DocIntent follows a strict package and folder structure. Contributions must respect these boundaries.
+
+### `api/`
+Public, documented entry points and fluent builder APIs.
+
+- Contains only the supported public surface
+- Classes here may be `public`
+- No implementation details
+- No direct rendering logic
+
+Examples:
+- `DocIntentDocument`
+- `DocIntentSection`
+
+---
+
+### `model/`
+Domain and structural concepts.
+
+- Enums and value objects
+- Describes *what exists*, not *how it is rendered*
+- No behavior-heavy logic
+
+Examples:
+- `DocIntentNodeType`
+- Style or layout value objects
+
+---
+
+### `internal/`
+Implementation details and engine internals.
+
+- Stack management
+- Validation logic
+- Orchestration helpers
+- Rendering coordination
+
+Rules:
+- Not part of the public API
+- May change without notice
+- Must not be referenced by consumers
+
+Examples:
+- `RenderStack`
+- Transition validators
+- Internal state holders
+
+---
+
+### `render/` and `pdf/`
+Output-specific rendering logic.
+
+- HTML generation
+- PDF orchestration
+- Format-specific behavior
+
+No domain rules should live here.
+
+---
+
+### General rules
+
+- Do not introduce new top-level folders without discussion
+- Do not create generic buckets like `util`, `common`, or `helpers`
+- Folder placement communicates intent; treat it as part of the API design
+
+---
+
 ## Formatting rules (Apex)
 
 - Indentation: **2 spaces**
