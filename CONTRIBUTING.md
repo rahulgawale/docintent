@@ -14,14 +14,6 @@ DocIntent focuses on one thing:
 
 > Deterministic document generation in Apex using explicit structure and streaming rendering.
 
-DocIntent is **not**:
-
-- a UI builder
-- a template or macro engine
-- an admin-facing tool
-- a document design platform
-- a feature-parity replacement for Conga or similar tools
-
 Contributions that move the project outside this scope will not be accepted.
 
 ---
