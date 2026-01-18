@@ -12,13 +12,7 @@ DocIntent Core is strictly limited to:
 - document structure
 - stack-based validation
 - rendering orchestration
-- PDF output via Salesforce native APIs
-
-It does not include:
-- UI components
-- template or macro languages
-- admin tooling
-- data fetching or business logic
+- PDF output via Salesforce native APIs
 
 Agents must not introduce abstractions outside this scope.
 
