@@ -45,34 +45,7 @@ No magic. No hidden scope.
 - suitable for developers and system-generated documents
 - designed to be composed and reused
 
-**DocIntent is not:**
-
-- a drag-and-drop UI
-- an admin-facing tool
-- a template or macro engine
-- a replacement for document design tools
-
 ---
-
-## Simple example
-
-```apex
-PdfDocument doc = PdfDocument.create()
-    .section()
-        .text('Invoice', Styles.heading())
-        .table()
-            .row()
-                .cell('Item')
-                .cell('Amount');
-
-for (LineItem__c item : items) {
-    doc.row()
-        .cell(item.Name)
-        .cell(item.Amount__c);
-}
-
-Blob pdf = doc.buildPdf();
-```
 
 ## Invoice example
 
