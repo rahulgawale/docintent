@@ -56,7 +56,6 @@ public class TableRenderer {
       baseStyle = state.resolveStyle('cell.base');
     } catch (RenderException e) {
       // cell.base is not defined; proceed with just the custom style
-      baseStyle = null;
     }
 
     // First merge the caller-provided style on top of the base style,

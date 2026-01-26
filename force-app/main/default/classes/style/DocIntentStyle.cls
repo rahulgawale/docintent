@@ -26,7 +26,9 @@ public class DocIntentStyle {
 
   public DocIntentStyle mergeWith(DocIntentStyle other) {
     DocIntentStyle merged = new DocIntentStyle();
-    // Copy this instance's properties and spacing first.
+    // Merge strategy: start with this instance as the base, then override
+    // with properties from 'other' if provided. This allows callers to
+    // layer styles, with the argument taking precedence over the receiver.
     merged.props.putAll(this.props);
     merged.spacingObj = this.spacingObj;
     // If another style is provided, let its properties and spacing override.
