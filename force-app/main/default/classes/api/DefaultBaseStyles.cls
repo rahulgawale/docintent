@@ -9,7 +9,7 @@ public class DefaultBaseStyles implements DocIntentBaseStyles {
       'document.base',
       new DocIntentStyle()
         .set('font-family', 'sans-serif')
-        .set('font-size', '12px')
+        .set('font-size', '14px')
         .set('color', '#000000')
         .set('margin', '0')
         .set('padding', '0')
