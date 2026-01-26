@@ -39,7 +39,13 @@ public class DocIntentDocument {
     state = new RenderState(resolved);
     state.pushNode(DocIntentNodeType.DOCUMENT);
     state.add('<html>');
-    state.add('<body>');
+
+    String documentStyle = state.getDocumentStyleString();
+    if (documentStyle != null) {
+      state.add('<body style="' + documentStyle + '">');
+    } else {
+      state.add('<body>');
+    }
   }
 
   // ===== Public fluent API =====
@@ -81,6 +87,11 @@ public class DocIntentDocument {
     state.add('<span>');
     state.add(state.escape(value));
     state.add('</span>');
+    return this;
+  }
+
+  public DocIntentDocument text(String value, DocIntentStyle style) {
+    state.addTag('span', style, state.escape(value));
     return this;
   }
 
@@ -151,22 +162,6 @@ public class DocIntentDocument {
   public DocIntentDocument cell(String value, DocIntentStyle style) {
     ensureState();
     TableRenderer.cell(state, value, style);
-    return this;
-  }
-
-  // Expose style & spacing registration for callers
-  public DocIntentDocument registerStyle(String name, DocIntentStyle style) {
-    ensureState();
-    state.registerStyle(name, style);
-    return this;
-  }
-
-  public DocIntentDocument registerSpacing(
-    String name,
-    DocIntentSpacing spacing
-  ) {
-    ensureState();
-    state.registerSpacing(name, spacing);
     return this;
   }
 

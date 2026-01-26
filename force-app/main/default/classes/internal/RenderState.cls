@@ -24,6 +24,18 @@ public class RenderState {
     chunks.add(chunk);
   }
 
+  // Get document base styles as serialized inline style string
+  // Returns null if document.base is not defined
+  public String getDocumentStyleString() {
+    DocIntentStyle documentStyle = null;
+    try {
+      documentStyle = resolveStyle('document.base');
+    } catch (Exception e) {
+      return null;
+    }
+    return serializeStyle(documentStyle);
+  }
+
   // Style registry
   public void registerStyle(String name, DocIntentStyle style) {
     styles.put(name, style);
@@ -74,6 +86,9 @@ public class RenderState {
   }
 
   public String serializeStyle(DocIntentStyle style) {
+    if (style == null) {
+      return '';
+    }
     List<String> parts = new List<String>();
     for (String key : style.properties().keySet()) {
       parts.add(key + ':' + style.properties().get(key));

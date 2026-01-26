@@ -1,6 +1,6 @@
 // Anonymous Apex: build an Account info PDF using DocIntent
 // Replace the Id below with a real Account Id in your org.
-Id acctId = '001f600000LG5XWAA1';
+Id acctId = '001Ws000052afDpIAI';
 
 Account acc = [
   SELECT Id, Name, Industry, Phone, Website
@@ -9,35 +9,48 @@ Account acc = [
   LIMIT 1
 ];
 
-DocIntentDocument doc = DocIntentDocument.create();
+// Define custom base styles for this document
+public class AccountReportStyles implements DocIntentBaseStyles {
+  private String border = '1px solid #909090';
+
+  public Map<String, DocIntentStyle> styles() {
+    Map<String, DocIntentStyle> m = new Map<String, DocIntentStyle>();
+
+    m.put(
+      'document.base',
+      new DocIntentStyle()
+        .fontFamily('sans-serif')
+        .fontSize('12px')
+        .color('#000000')
+    );
+
+    m.put(
+      'heading.H1',
+      new DocIntentStyle()
+        .fontSize('30px')
+        .set('letter-spacing', '1px')
+        .set('margin', '0')
+        .color('#FFFFFF')
+    );
+
+    m.put(
+      'table.base',
+      new DocIntentStyle()
+        .backgroundColor('#FFFFFF')
+        .border(border)
+        .width('100%')
+    );
+
+    m.put('cell.base', new DocIntentStyle().padding('12px').border(border));
+
+    return m;
+  }
+}
+
+DocIntentDocument doc = DocIntentDocument.create()
+  .withBaseStyles(new AccountReportStyles());
 
 String border = '1px solid #909090';
-// register styles & spacings used for this document
-doc.registerStyle(
-  'heading.H1',
-  new DocIntentStyle()
-    .fontSize('30px')
-    .set('letter-spacing', '1px')
-    .set('margin', '0')
-    .color('#FFFFFF')
-);
-
-doc.registerStyle(
-  'table.base',
-  new DocIntentStyle()
-    .backgroundColor('#FFFFFF')
-    .set('margin-top', '22px')
-    .border(border)
-    .borderRadius('8px')
-    .width('92%')
-    .marginLeft('auto')
-    .marginRight('auto')
-);
-
-doc.registerStyle(
-  'cell.base',
-  new DocIntentStyle().padding('12px').borderBottom(border)
-);
 
 // Build header
 doc.section(
@@ -46,7 +59,7 @@ doc.section(
     .spacing(DocIntentSpacingScale.p(6))
 );
 doc.heading(
-  'SALESFORCE GEEK',
+  'DocIntent PDF Generation',
   DocIntentHeadingLevel.H1,
   new DocIntentStyle()
     .fontSize('30px')
@@ -55,20 +68,10 @@ doc.heading(
     .color('#FFFFFF')
 );
 doc.paragraph(
-  'PDF generated using DocIntent',
+  'DocIntent is a PDF generation DSL that lets you safely build reusable document blocks and assemble any PDF without touching fragile HTML.',
   new DocIntentStyle().color('#FFFFFF')
 );
 doc.endSection();
-
-// Reset base text
-doc.registerStyle(
-  'base.text',
-  new DocIntentStyle().fontFamily('Helvetica').fontSize('12px').color('#000000')
-);
-doc.registerSpacing(
-  'paragraph.base',
-  new DocIntentSpacing().marginBottom('8px')
-);
 
 // Main card/table
 doc.section();
@@ -77,14 +80,13 @@ doc.table();
 DocIntentStyle titleCellStyle = new DocIntentStyle()
   .padding('14px')
   .fontSize('15px')
-  .backgroundColor('#EEF4FF');
+  .backgroundColor('#EEF4FF')
+  .border(border);
 DocIntentStyle labelStyle = new DocIntentStyle()
   .padding('12px')
-  .borderBottom(border)
+  .border(border)
   .bold();
-DocIntentStyle valueStyle = new DocIntentStyle()
-  .padding('12px')
-  .borderBottom(border);
+DocIntentStyle valueStyle = new DocIntentStyle().padding('12px').border(border);
 
 doc.row();
 doc.cell('Account Information', titleCellStyle);

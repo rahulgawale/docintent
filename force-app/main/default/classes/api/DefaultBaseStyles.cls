@@ -6,10 +6,13 @@ public class DefaultBaseStyles implements DocIntentBaseStyles {
     Map<String, DocIntentStyle> m = new Map<String, DocIntentStyle>();
 
     m.put(
-      'base.text',
+      'document.base',
       new DocIntentStyle()
-        .set('font-family', 'Helvetica')
+        .set('font-family', 'sans-serif')
         .set('font-size', '12px')
+        .set('color', '#000000')
+        .set('margin', '0')
+        .set('padding', '0')
     );
 
     m.put(

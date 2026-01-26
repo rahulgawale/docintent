@@ -108,12 +108,6 @@ public class DocIntentStyle {
     return this;
   }
 
-  // Border radius (single helper)
-  public DocIntentStyle borderRadius(String v) {
-    props.put('border-radius', v);
-    return this;
-  }
-
   // Vertical alignment (tables)
   public DocIntentStyle verticalAlign(String v) {
     return set('vertical-align', v);
