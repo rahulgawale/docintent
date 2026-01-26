@@ -50,10 +50,12 @@ public class TableRenderer {
   ) {
     // Resolve the base cell style so that defaults (e.g., padding, borders)
     // are still applied even when a custom style is provided.
+    // If cell.base is not defined, gracefully fall back to null.
     DocIntentStyle baseStyle = null;
     try {
       baseStyle = state.resolveStyle('cell.base');
-    } catch (Exception e) {
+    } catch (RenderException e) {
+      // cell.base is not defined; proceed with just the custom style
       baseStyle = null;
     }
 

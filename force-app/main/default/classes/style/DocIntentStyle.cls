@@ -80,7 +80,7 @@ public class DocIntentStyle {
     List<String> parts = existing.split('\\s+');
     Boolean alreadyPresent = false;
     for (String part : parts) {
-      if (part == decoration) {
+      if (part.equals(decoration)) {
         alreadyPresent = true;
         break;
       }
