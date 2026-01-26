@@ -1,11 +1,21 @@
 public class TableRenderer {
   public static void openTable(RenderState state) {
-    state.add('<table>');
+    DocIntentStyle baseStyle = null;
+    try {
+      baseStyle = state.resolveStyle('table.base');
+    } catch (Exception e) {
+      baseStyle = null;
+    }
+
+    DocIntentSpacing spacing = state.resolveSpacing('table.base');
+    DocIntentStyle merged = state.mergeStyleAndSpacing(baseStyle, spacing);
+
+    state.addOpenTag('table', merged);
     state.pushNode(DocIntentNodeType.TABLE);
   }
 
   public static void closeTable(RenderState state) {
-    state.add('</table>');
+    state.addCloseTag('table');
     state.popNode(DocIntentNodeType.TABLE);
   }
 
@@ -20,8 +30,26 @@ public class TableRenderer {
   }
 
   public static void cell(RenderState state, String value) {
-    state.add('<td>');
-    state.add(state.escape(value));
-    state.add('</td>');
+    DocIntentStyle baseStyle = null;
+    try {
+      baseStyle = state.resolveStyle('cell.base');
+    } catch (Exception e) {
+      baseStyle = null;
+    }
+
+    DocIntentSpacing spacing = state.resolveSpacing('cell.base');
+    DocIntentStyle merged = state.mergeStyleAndSpacing(baseStyle, spacing);
+
+    state.addTag('td', merged, state.escape(value));
+  }
+
+  public static void cell(
+    RenderState state,
+    String value,
+    DocIntentStyle style
+  ) {
+    DocIntentSpacing spacing = state.resolveSpacing('cell.base');
+    DocIntentStyle merged = state.mergeStyleAndSpacing(style, spacing);
+    state.addTag('td', merged, state.escape(value));
   }
 }

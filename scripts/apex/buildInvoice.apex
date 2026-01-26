@@ -32,7 +32,7 @@ doc
 doc.section().heading('Total: $60', DocIntentHeadingLevel.H2).endSection();
 
 // Render PDF
-Blob pdf = doc.buildPdf();
+Blob pdf = doc.toPdf();
 
 ContentVersion cv = new ContentVersion();
 cv.Title = 'Invoice';

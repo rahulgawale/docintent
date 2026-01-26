@@ -6,9 +6,31 @@ public class HeadingRenderer {
   ) {
     String tag = toTag(level);
 
-    state.add('<' + tag + '>');
-    state.add(state.escape(value));
-    state.add('</' + tag + '>');
+    DocIntentStyle baseStyle = null;
+    try {
+      baseStyle = state.resolveStyle('heading.' + level.name());
+    } catch (Exception e) {
+      // fallback to heading.H1 if not found
+      baseStyle = state.resolveStyle('heading.H1');
+    }
+
+    DocIntentSpacing spacing = state.resolveSpacing('heading.' + level.name());
+
+    DocIntentStyle merged = state.mergeStyleAndSpacing(baseStyle, spacing);
+
+    state.addTag(tag, merged, state.escape(value));
+  }
+
+  public static void render(
+    RenderState state,
+    String value,
+    DocIntentHeadingLevel level,
+    DocIntentStyle style
+  ) {
+    String tag = toTag(level);
+    DocIntentSpacing spacing = state.resolveSpacing('heading.' + level.name());
+    DocIntentStyle merged = state.mergeStyleAndSpacing(style, spacing);
+    state.addTag(tag, merged, state.escape(value));
   }
 
   private static String toTag(DocIntentHeadingLevel level) {

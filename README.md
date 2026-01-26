@@ -103,3 +103,27 @@ insert cv;
 ## License
 
 Licensed under the Apache License, Version 2.0.
+
+## Overriding styles inline
+
+You can override base styles for a single element by passing a `DocIntentStyle` to the API. This example shows overriding a heading and a paragraph inline (run from Anonymous Apex):
+
+```apex
+DocIntentDocument doc = DocIntentDocument.create();
+
+doc.section()
+  .heading(
+    'Custom Title',
+    DocIntentHeadingLevel.H1,
+    new DocIntentStyle().set('font-size', '32px').set('color', '#222')
+  )
+  .paragraph(
+    'Intro paragraph with custom style.',
+    new DocIntentStyle().set('font-size', '14px').set('font-style', 'italic')
+  )
+  .endSection();
+
+Blob pdf = doc.toPdf();
+String html = doc.toHtml();
+System.debug(html);
+```
