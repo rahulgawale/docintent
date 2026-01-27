@@ -1,7 +1,4 @@
 public class DefaultBaseStyles implements DocIntentBaseStyles {
-  public DefaultBaseStyles() {
-  }
-
   public Map<String, DocIntentStyle> styles() {
     Map<String, DocIntentStyle> m = new Map<String, DocIntentStyle>();
 

@@ -67,6 +67,10 @@ Style         ::= new DocIntentStyle()
                   Note: All style setters are order-independent.
                   Later calls overwrite earlier values for the same property.
 
+                  IMPORTANT: Spacing always takes precedence over style properties.
+                  If both .set('padding-left', '12px') and .spacing(...paddingX('20px'))
+                  are used, the spacing value wins regardless of call order.
+
 Spacing       ::= new DocIntentSpacing()
                   [ .margin(String) ]
                   [ .marginTop(String) ]
@@ -85,6 +89,10 @@ Spacing       ::= new DocIntentSpacing()
 
                   Note: All spacing setters are order-independent.
                   Later calls overwrite earlier values for the same property.
+
+                  Spacing properties always override equivalent style properties
+                  (e.g., .paddingX() overrides .set('padding-left', ...)).
+                  This ensures consistent layout control.
 ```
 
 ---

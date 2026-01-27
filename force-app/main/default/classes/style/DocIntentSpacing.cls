@@ -1,10 +1,17 @@
 public class DocIntentSpacing {
   private Map<String, String> props = new Map<String, String>();
 
-  public DocIntentSpacing() {
+  public DocIntentSpacing set(String key, String value) {
+    props.put(key, value);
+    return this;
   }
 
-  // Margins
+  public Map<String, String> properties() {
+    return new Map<String, String>(props);
+  }
+
+  // ===== Margin =====
+
   public DocIntentSpacing margin(String v) {
     props.put('margin', v);
     return this;
@@ -30,7 +37,6 @@ public class DocIntentSpacing {
     return this;
   }
 
-  // Margin X-Y
   public DocIntentSpacing marginX(String v) {
     props.put('margin-left', v);
     props.put('margin-right', v);
@@ -43,19 +49,10 @@ public class DocIntentSpacing {
     return this;
   }
 
-  // Paddings
+  // ===== Padding =====
+
   public DocIntentSpacing padding(String v) {
     props.put('padding', v);
-    return this;
-  }
-
-  public DocIntentSpacing paddingLeft(String v) {
-    props.put('padding-left', v);
-    return this;
-  }
-
-  public DocIntentSpacing paddingRight(String v) {
-    props.put('padding-right', v);
     return this;
   }
 
@@ -69,7 +66,16 @@ public class DocIntentSpacing {
     return this;
   }
 
-  // Padding X-Y
+  public DocIntentSpacing paddingLeft(String v) {
+    props.put('padding-left', v);
+    return this;
+  }
+
+  public DocIntentSpacing paddingRight(String v) {
+    props.put('padding-right', v);
+    return this;
+  }
+
   public DocIntentSpacing paddingX(String v) {
     props.put('padding-left', v);
     props.put('padding-right', v);
@@ -80,9 +86,5 @@ public class DocIntentSpacing {
     props.put('padding-top', v);
     props.put('padding-bottom', v);
     return this;
-  }
-
-  public Map<String, String> properties() {
-    return new Map<String, String>(props);
   }
 }

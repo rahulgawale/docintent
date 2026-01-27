@@ -5,8 +5,6 @@ public class DocIntentDocument {
   private DocIntentBaseStyles baseStylesProvider;
 
   private DocIntentDocument() {
-    // defer RenderState creation until first use so callers may supply
-    // custom base styles via withBaseStyles(...)
     this.baseStylesProvider = null;
   }
 
@@ -14,14 +12,11 @@ public class DocIntentDocument {
     return new DocIntentDocument();
   }
 
-  // Allow callers to supply a base styles provider. Must be called before
-  // any rendering operations (section/paragraph/heading/table...).
   public DocIntentDocument withBaseStyles(DocIntentBaseStyles styles) {
     this.baseStylesProvider = styles;
     return this;
   }
 
-  // Lazily create RenderState using default + optional custom provider
   private void ensureState() {
     if (state != null)
       return;
@@ -42,13 +37,13 @@ public class DocIntentDocument {
 
     String documentStyle = state.getDocumentStyleString();
     if (documentStyle != null) {
-      state.add('<body style="' + documentStyle + '">');
+      state.add('<body style=\"' + documentStyle + '\">"');
     } else {
       state.add('<body>');
     }
   }
 
-  // ===== Public fluent API =====
+  // ===== Document Structure =====
 
   public DocIntentDocument section() {
     ensureState();
@@ -83,6 +78,8 @@ public class DocIntentDocument {
     return this;
   }
 
+  // ===== Text Content =====
+
   public DocIntentDocument text(String value) {
     state.add('<span>');
     state.add(state.escape(value));
@@ -98,8 +95,6 @@ public class DocIntentDocument {
   public DocIntentDocument paragraph(String value) {
     ensureState();
 
-    // Intentionally rely on document.base styles and paragraph spacing
-    // rather than a non-existent 'base.text' style.
     DocIntentSpacing spacing = state.resolveSpacing('paragraph.base');
     DocIntentStyle merged = state.mergeStyleAndSpacing(null, spacing);
 
@@ -116,14 +111,16 @@ public class DocIntentDocument {
     return this;
   }
 
+  // ===== Headings =====
+
+  public DocIntentDocument heading(String value) {
+    return heading(value, DocIntentHeadingLevel.H1);
+  }
+
   public DocIntentDocument heading(String value, DocIntentHeadingLevel level) {
     ensureState();
     HeadingRenderer.render(state, value, level);
     return this;
-  }
-
-  public DocIntentDocument heading(String value) {
-    return heading(value, DocIntentHeadingLevel.H1);
   }
 
   public DocIntentDocument heading(
@@ -135,6 +132,8 @@ public class DocIntentDocument {
     HeadingRenderer.render(state, value, level, style);
     return this;
   }
+
+  // ===== Tables =====
 
   public DocIntentDocument table() {
     ensureState();
@@ -160,11 +159,11 @@ public class DocIntentDocument {
     return this;
   }
 
-  // ===== Lifecycle =====
+  // ===== Output =====
 
   private void ensureBuilt() {
     if (isBuilt)
-      return; // idempotent
+      return;
     ensureState();
     state.closeAllUntil(DocIntentNodeType.DOCUMENT);
     state.add('</body>');

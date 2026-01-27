@@ -47,6 +47,7 @@ class AccountReportStyles implements DocIntentBaseStyles {
   }
 }
 
+String border = '1px solid #909090';
 DocIntentDocument doc = DocIntentDocument.create()
   .withBaseStyles(new AccountReportStyles());
 

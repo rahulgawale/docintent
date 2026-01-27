@@ -5,6 +5,8 @@ public class DocIntentStyle {
   public DocIntentStyle() {
   }
 
+  // ===== Core API =====
+
   // Spacing composition - replaces previous spacing
   public DocIntentStyle spacing(DocIntentSpacing s) {
     this.spacingObj = s;
@@ -41,26 +43,30 @@ public class DocIntentStyle {
     return merged;
   }
 
-  // Allow callers to set any font-family name supported by the PDF renderer.
+  // ===== Typography =====
+
   public DocIntentStyle fontFamily(String v) {
     return set('font-family', v);
   }
 
-  // Font-size helper
   public DocIntentStyle fontSize(String v) {
     return set('font-size', v);
   }
 
-  // Raw color helpers
-  public DocIntentStyle color(String v) {
-    return set('color', v);
+  public DocIntentStyle fontWeight(String v) {
+    return set('font-weight', v);
   }
 
-  public DocIntentStyle backgroundColor(String v) {
-    return set('background-color', v);
+  public DocIntentStyle lineHeight(String v) {
+    return set('line-height', v);
   }
 
-  // Text style helpers
+  public DocIntentStyle textAlign(String v) {
+    return set('text-align', v);
+  }
+
+  // ===== Text Decoration =====
+
   public DocIntentStyle bold() {
     props.put('font-weight', 'bold');
     return this;
@@ -71,10 +77,20 @@ public class DocIntentStyle {
     return this;
   }
 
+  public DocIntentStyle underline() {
+    addTextDecoration('underline');
+    return this;
+  }
+
+  public DocIntentStyle strike() {
+    addTextDecoration('line-through');
+    return this;
+  }
+
   // Helper to combine multiple text-decoration values (e.g., "underline line-through").
   private void addTextDecoration(String decoration) {
     String existing = props.get('text-decoration');
-    if (existing == null || existing.trim().isEmpty()) {
+    if (String.isBlank(existing)) {
       props.put('text-decoration', decoration);
       return;
     }
@@ -92,22 +108,72 @@ public class DocIntentStyle {
     }
   }
 
-  public DocIntentStyle underline() {
-    addTextDecoration('underline');
+  // ===== Color =====
+
+  public DocIntentStyle color(String v) {
+    return set('color', v);
+  }
+
+  public DocIntentStyle backgroundColor(String v) {
+    return set('background-color', v);
+  }
+
+  // ===== Spacing =====
+
+  // Margin
+  public DocIntentStyle margin(String v) {
+    props.put('margin', v);
     return this;
   }
 
-  public DocIntentStyle strike() {
-    addTextDecoration('line-through');
+  public DocIntentStyle marginTop(String v) {
+    props.put('margin-top', v);
     return this;
   }
 
-  // Text alignment (raw)
-  public DocIntentStyle textAlign(String v) {
-    return set('text-align', v);
+  public DocIntentStyle marginBottom(String v) {
+    props.put('margin-bottom', v);
+    return this;
   }
 
-  // Border helpers
+  public DocIntentStyle marginLeft(String v) {
+    props.put('margin-left', v);
+    return this;
+  }
+
+  public DocIntentStyle marginRight(String v) {
+    props.put('margin-right', v);
+    return this;
+  }
+
+  // Padding
+  public DocIntentStyle padding(String v) {
+    props.put('padding', v);
+    return this;
+  }
+
+  public DocIntentStyle paddingTop(String v) {
+    props.put('padding-top', v);
+    return this;
+  }
+
+  public DocIntentStyle paddingBottom(String v) {
+    props.put('padding-bottom', v);
+    return this;
+  }
+
+  public DocIntentStyle paddingLeft(String v) {
+    props.put('padding-left', v);
+    return this;
+  }
+
+  public DocIntentStyle paddingRight(String v) {
+    props.put('padding-right', v);
+    return this;
+  }
+
+  // ===== Border =====
+
   public DocIntentStyle border(String v) {
     props.put('border', v);
     return this;
@@ -138,29 +204,8 @@ public class DocIntentStyle {
     return this;
   }
 
-  // Vertical alignment (tables)
-  public DocIntentStyle verticalAlign(String v) {
-    return set('vertical-align', v);
-  }
+  // ===== Layout =====
 
-  // Margin left/right helpers
-  public DocIntentStyle marginLeft(String v) {
-    props.put('margin-left', v);
-    return this;
-  }
-
-  public DocIntentStyle marginRight(String v) {
-    props.put('margin-right', v);
-    return this;
-  }
-
-  // Padding helper (shorthand)
-  public DocIntentStyle padding(String v) {
-    props.put('padding', v);
-    return this;
-  }
-
-  // Width / height
   public DocIntentStyle width(String v) {
     return set('width', v);
   }
@@ -169,18 +214,11 @@ public class DocIntentStyle {
     return set('height', v);
   }
 
-  // White-space
+  public DocIntentStyle verticalAlign(String v) {
+    return set('vertical-align', v);
+  }
+
   public DocIntentStyle whiteSpace(String v) {
     return set('white-space', v);
-  }
-
-  // Font weight (raw, numeric or keywords)
-  public DocIntentStyle fontWeight(String v) {
-    return set('font-weight', v);
-  }
-
-  // Line height
-  public DocIntentStyle lineHeight(String v) {
-    return set('line-height', v);
   }
 }

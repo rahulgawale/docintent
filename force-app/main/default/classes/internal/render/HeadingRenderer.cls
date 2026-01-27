@@ -5,13 +5,9 @@ public class HeadingRenderer {
     DocIntentHeadingLevel level
   ) {
     String tag = toTag(level);
-
     DocIntentStyle baseStyle = state.resolveStyle('heading.' + level.name());
-
     DocIntentSpacing spacing = state.resolveSpacing('heading.' + level.name());
-
     DocIntentStyle merged = state.mergeStyleAndSpacing(baseStyle, spacing);
-
     state.addTag(tag, merged, state.escape(value));
   }
 

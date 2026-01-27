@@ -4,8 +4,6 @@ public class RenderState {
   private Map<String, DocIntentStyle> styles = new Map<String, DocIntentStyle>();
   private Map<String, DocIntentSpacing> spacings = new Map<String, DocIntentSpacing>();
 
-  // RenderState consumes a resolved base styles provider. It performs no
-  // merging or defaulting; it simply imports the provided styles map.
   public RenderState(DocIntentBaseStyles baseStyles) {
     if (baseStyles != null && baseStyles.styles() != null) {
       for (String k : baseStyles.styles().keySet()) {
@@ -13,30 +11,24 @@ public class RenderState {
       }
     }
 
-    // Default spacing for paragraph remains engine-owned for now
     registerSpacing(
       'paragraph.base',
       new DocIntentSpacing().marginBottom('8px')
     );
   }
 
+  // ===== Buffer Management =====
+
   public void add(String chunk) {
     chunks.add(chunk);
   }
 
-  // Get document base styles as serialized inline style string
-  // Returns null if document.base is not defined
-  public String getDocumentStyleString() {
-    DocIntentStyle documentStyle = null;
-    try {
-      documentStyle = resolveStyle('document.base');
-    } catch (Exception e) {
-      return null;
-    }
-    return serializeStyle(documentStyle);
+  public String buildHtml() {
+    return String.join(chunks, '');
   }
 
-  // Style registry
+  // ===== Style Registry =====
+
   public void registerStyle(String name, DocIntentStyle style) {
     styles.put(name, style);
   }
@@ -48,18 +40,76 @@ public class RenderState {
     return styles.get(name);
   }
 
-  // Spacing registry
+  public String getDocumentStyleString() {
+    DocIntentStyle documentStyle = null;
+    try {
+      documentStyle = resolveStyle('document.base');
+    } catch (Exception e) {
+      return null;
+    }
+    return serializeStyle(documentStyle);
+  }
+
+  // ===== Spacing Registry =====
+
   public void registerSpacing(String name, DocIntentSpacing spacing) {
     spacings.put(name, spacing);
   }
 
   public DocIntentSpacing resolveSpacing(String name) {
     if (!spacings.containsKey(name)) {
-      // return empty spacing rather than throw; spacing is optional
       return new DocIntentSpacing();
     }
     return spacings.get(name);
   }
+
+  // ===== Style Merging =====
+
+  public DocIntentStyle mergeStyles(
+    DocIntentStyle base,
+    DocIntentStyle overridden
+  ) {
+    if (base == null) {
+      return overridden;
+    }
+    if (overridden == null) {
+      return base;
+    }
+    return base.mergeWith(overridden);
+  }
+
+  public DocIntentStyle mergeStyleAndSpacing(
+    DocIntentStyle style,
+    DocIntentSpacing registeredSpacing
+  ) {
+    DocIntentSpacing callerSpacing = (style != null)
+      ? style.getSpacing()
+      : null;
+    DocIntentSpacing mergedSpacing = new DocIntentSpacing();
+
+    if (registeredSpacing != null) {
+      for (String k : registeredSpacing.properties().keySet()) {
+        mergedSpacing.set(k, registeredSpacing.properties().get(k));
+      }
+    }
+
+    if (callerSpacing != null) {
+      for (String k : callerSpacing.properties().keySet()) {
+        mergedSpacing.set(k, callerSpacing.properties().get(k));
+      }
+    }
+
+    DocIntentStyle spacingAsStyle = new DocIntentStyle();
+    for (String k : mergedSpacing.properties().keySet()) {
+      spacingAsStyle.set(k, mergedSpacing.properties().get(k));
+    }
+
+    if (style == null)
+      return spacingAsStyle;
+    return style.mergeWith(spacingAsStyle);
+  }
+
+  // ===== HTML Generation =====
 
   public void addOpenTag(String tag, DocIntentStyle style) {
     if (style != null) {
@@ -96,39 +146,6 @@ public class RenderState {
     return String.join(parts, ';');
   }
 
-  public DocIntentStyle mergeStyleAndSpacing(
-    DocIntentStyle style,
-    DocIntentSpacing registeredSpacing
-  ) {
-    // Priority: style.spacing > registeredSpacing > none
-    DocIntentSpacing finalSpacing = null;
-    if (style != null && style.getSpacing() != null) {
-      finalSpacing = style.getSpacing();
-    } else if (registeredSpacing != null) {
-      finalSpacing = registeredSpacing;
-    }
-
-    DocIntentStyle spacingAsStyle = new DocIntentStyle();
-    if (finalSpacing != null) {
-      for (String k : finalSpacing.properties().keySet()) {
-        spacingAsStyle.set(k, finalSpacing.properties().get(k));
-      }
-    }
-
-    if (style == null)
-      return spacingAsStyle;
-    return style.mergeWith(spacingAsStyle);
-  }
-
-  public void pushNode(DocIntentNodeType type) {
-    stack.push(type);
-  }
-
-  public void popNode(DocIntentNodeType expected) {
-    // TODO validation later
-    stack.pop();
-  }
-
   public String escape(String value) {
     if (value == null)
       return '';
@@ -136,6 +153,16 @@ public class RenderState {
       .replace('&', '&amp;')
       .replace('<', '&lt;')
       .replace('>', '&gt;');
+  }
+
+  // ===== Stack Management =====
+
+  public void pushNode(DocIntentNodeType type) {
+    stack.push(type);
+  }
+
+  public void popNode(DocIntentNodeType expected) {
+    stack.pop();
   }
 
   private void close(DocIntentNodeType type) {
@@ -150,7 +177,6 @@ public class RenderState {
         add('</tr>');
       }
       when DOCUMENT {
-        // should never be closed here
         throw new RenderException(
           'Attempted to close DOCUMENT node explicitly'
         );
@@ -176,12 +202,7 @@ public class RenderState {
     }
   }
 
-  public String buildHtml() {
-    return String.join(chunks, '');
-  }
-
   public void closeCurrentSection() {
-    // First: unwind inner structures (table, row, etc.)
     while (true) {
       DocIntentNodeType current = stack.peek();
 
