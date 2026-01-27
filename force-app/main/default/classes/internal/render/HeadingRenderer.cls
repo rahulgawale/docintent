@@ -5,10 +5,22 @@ public class HeadingRenderer {
     DocIntentHeadingLevel level
   ) {
     String tag = toTag(level);
+    DocIntentStyle baseStyle = state.resolveStyle('heading.' + level.name());
+    DocIntentSpacing spacing = state.resolveSpacing('heading.' + level.name());
+    DocIntentStyle merged = state.mergeStyleAndSpacing(baseStyle, spacing);
+    state.addTag(tag, merged, state.escape(value));
+  }
 
-    state.add('<' + tag + '>');
-    state.add(state.escape(value));
-    state.add('</' + tag + '>');
+  public static void render(
+    RenderState state,
+    String value,
+    DocIntentHeadingLevel level,
+    DocIntentStyle style
+  ) {
+    String tag = toTag(level);
+    DocIntentSpacing spacing = state.resolveSpacing('heading.' + level.name());
+    DocIntentStyle merged = state.mergeStyleAndSpacing(style, spacing);
+    state.addTag(tag, merged, state.escape(value));
   }
 
   private static String toTag(DocIntentHeadingLevel level) {

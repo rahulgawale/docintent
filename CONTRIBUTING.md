@@ -27,10 +27,100 @@ All contributions must preserve the following principles:
 - Business logic lives in Apex, not templates
 - Streaming rendering, not DOM or tree building
 - Fail fast and loudly on invalid usage
+- **Fluent DSL integrity must be maintained at all costs**
+- **Mutable state is strictly forbidden in public APIs**
 
 **DocIntent will reject contributions even if they are useful when they weaken determinism or explicit structure.**
 
 These constraints are intentional and non-negotiable.
+
+---
+
+## Critical: DSL structure and immutability
+
+**The fluent DSL is the foundation of DocIntent. Breaking it is grounds for immediate rejection.**
+
+### DSL rules
+
+1. **All fluent methods must return `this` or the builder instance**
+   - Method chaining must never break
+   - Example: `doc.section().heading('X').paragraph('Y').endSection()`
+
+2. **No setter methods that mutate completed structures**
+   - Once a section/table/row is closed, it cannot be modified
+   - No `updateHeading()`, `replaceCell()`, or similar mutation APIs
+
+3. **No stateful builders that change behavior based on call order**
+   - Each method call must be deterministic
+   - No hidden modes or flags that alter subsequent behavior
+
+4. **Document structure is write-once**
+   - After calling `toPdf()` or `toHtml()`, the document is frozen
+   - No "rebuild" or "regenerate" methods
+
+5. **All validation happens immediately**
+   - Invalid structure throws immediately
+   - No deferred validation or "lazy" error checking
+
+### Immutability rules
+
+**Mutable state is forbidden** in public APIs and user-facing classes.
+
+**Allowed mutable state** (internal only):
+
+- Rendering buffers during streaming output
+- Stack state for structure validation
+- Temporary variables within method scope
+
+**Forbidden mutable state**:
+
+- Public setters on document/section/table objects
+- State that changes rendering behavior after construction
+- Caches that affect output determinism
+- Configuration that can be modified mid-rendering
+
+**Example of forbidden pattern:**
+
+```apex
+// FORBIDDEN: mutable state after construction
+DocIntentDocument doc = DocIntentDocument.create();
+doc.section().heading('Title').endSection();
+doc.setGlobalFontSize('14px'); // NO - mutates after creation
+doc.toPdf();
+```
+
+**Example of allowed pattern:**
+
+```apex
+// ALLOWED: configuration before any rendering
+DocIntentDocument doc = DocIntentDocument.create()
+  .withBaseStyles(new MyStyles());
+doc.section().heading('Title').endSection();
+doc.toPdf();
+```
+
+### Violations that will be rejected
+
+- Adding `set*()` methods to public APIs
+- Introducing "edit mode" or "draft mode" concepts
+- Creating mutable configuration objects
+- Adding methods that require calling them in a specific sequence beyond the DSL structure
+- Breaking method chaining in any way
+- Adding state that changes rendering semantics
+- **Exposing internal registries or state mutation methods (e.g., `registerStyle`, `registerSpacing`)**
+
+**Why registry methods were removed:**
+
+Earlier versions exposed `doc.registerStyle()` and `doc.registerSpacing()` methods. These violated encapsulation by:
+
+- Allowing mutation after document structure had begun
+- Introducing ordering dependencies (when to register vs when to render)
+- Exposing internal `RenderState` mechanisms
+- Contradicting the base styles provider model
+
+The correct pattern is to use `DocIntentBaseStyles` implementations passed via `withBaseStyles()` before any rendering begins.
+
+**If in doubt, ask first. DSL and immutability violations are non-negotiable.**
 
 ---
 
