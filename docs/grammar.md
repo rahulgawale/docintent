@@ -49,6 +49,9 @@ Style         ::= new DocIntentStyle()
                   [ .backgroundColor(String) ]
                   [ .fontSize(String) ]
                   [ .fontFamily(String) ]
+                  [ .fontWeight(String) ]
+                  [ .lineHeight(String) ]
+                  [ .textAlign(String) ]
                   [ .bold() ]
                   [ .italic() ]
                   [ .underline() ]
@@ -56,11 +59,23 @@ Style         ::= new DocIntentStyle()
                   [ .border(String) ]
                   [ .borderTop(String) ]
                   [ .borderBottom(String) ]
-                  [ .padding(String) ]
+                  [ .borderColor(String) ]
+                  [ .borderWidth(String) ]
+                  [ .borderStyle(String) ]
                   [ .margin(String) ]
+                  [ .marginTop(String) ]
+                  [ .marginBottom(String) ]
+                  [ .marginLeft(String) ]
+                  [ .marginRight(String) ]
+                  [ .padding(String) ]
+                  [ .paddingTop(String) ]
+                  [ .paddingBottom(String) ]
+                  [ .paddingLeft(String) ]
+                  [ .paddingRight(String) ]
                   [ .width(String) ]
                   [ .height(String) ]
-                  [ .textAlign(String) ]
+                  [ .verticalAlign(String) ]
+                  [ .whiteSpace(String) ]
                   [ .spacing(DocIntentSpacing) ]
                   [ ... ]
 
@@ -231,14 +246,22 @@ DocIntentStyle xl = DocIntentFontScale.xl();  // 24px (size 10)
 
 ```apex
 // Padding helpers (multiples of 4px)
-DocIntentSpacing p4 = DocIntentSpacingScale.p(4);   // padding: 16px
-DocIntentSpacing px3 = DocIntentSpacingScale.px(3); // padding-x: 12px
-DocIntentSpacing py2 = DocIntentSpacingScale.py(2); // padding-y: 8px
+DocIntentSpacing p4 = DocIntentSpacingScale.p(4);    // padding: 16px
+DocIntentSpacing px3 = DocIntentSpacingScale.px(3);  // padding-x: 12px
+DocIntentSpacing py2 = DocIntentSpacingScale.py(2);  // padding-y: 8px
+DocIntentSpacing pt5 = DocIntentSpacingScale.pt(5);  // padding-top: 20px
+DocIntentSpacing pb3 = DocIntentSpacingScale.pb(3);  // padding-bottom: 12px
+DocIntentSpacing pl2 = DocIntentSpacingScale.pl(2);  // padding-left: 8px
+DocIntentSpacing pr4 = DocIntentSpacingScale.pr(4);  // padding-right: 16px
 
 // Margin helpers (multiples of 4px)
-DocIntentSpacing m6 = DocIntentSpacingScale.m(6);   // margin: 24px
-DocIntentSpacing mx4 = DocIntentSpacingScale.mx(4); // margin-x: 16px
-DocIntentSpacing my3 = DocIntentSpacingScale.my(3); // margin-y: 12px
+DocIntentSpacing m6 = DocIntentSpacingScale.m(6);    // margin: 24px
+DocIntentSpacing mx4 = DocIntentSpacingScale.mx(4);  // margin-x: 16px
+DocIntentSpacing my3 = DocIntentSpacingScale.my(3);  // margin-y: 12px
+DocIntentSpacing mt4 = DocIntentSpacingScale.mt(4);  // margin-top: 16px
+DocIntentSpacing mb2 = DocIntentSpacingScale.mb(2);  // margin-bottom: 8px
+DocIntentSpacing ml3 = DocIntentSpacingScale.ml(3);  // margin-left: 12px
+DocIntentSpacing mr5 = DocIntentSpacingScale.mr(5);  // margin-right: 20px
 ```
 
 ---
