@@ -171,7 +171,7 @@ DocIntent applies global document styles as an inline style attribute on `<body>
 
 ```apex
 DocIntentDocument doc = DocIntentDocument.create();
-// Uses default: sans-serif font, 12px, black text
+// Uses default: sans-serif font, 14px, black text
 ```
 
 ### Override document styles

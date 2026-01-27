@@ -21,14 +21,23 @@ public class DocIntentStyle {
   }
 
   public Map<String, String> properties() {
-    return props;
+    return new Map<String, String>(props);
   }
 
   public DocIntentStyle mergeWith(DocIntentStyle other) {
     DocIntentStyle merged = new DocIntentStyle();
+    // Merge strategy: start with this instance as the base, then override
+    // with properties from 'other' if provided. This allows callers to
+    // layer styles, with the argument taking precedence over the receiver.
     merged.props.putAll(this.props);
-    if (other != null)
+    merged.spacingObj = this.spacingObj;
+    // If another style is provided, let its properties and spacing override.
+    if (other != null) {
       merged.props.putAll(other.props);
+      if (other.spacingObj != null) {
+        merged.spacingObj = other.spacingObj;
+      }
+    }
     return merged;
   }
 
@@ -62,13 +71,34 @@ public class DocIntentStyle {
     return this;
   }
 
+  // Helper to combine multiple text-decoration values (e.g., "underline line-through").
+  private void addTextDecoration(String decoration) {
+    String existing = props.get('text-decoration');
+    if (existing == null || existing.trim().isEmpty()) {
+      props.put('text-decoration', decoration);
+      return;
+    }
+    // Avoid adding duplicate decorations.
+    List<String> parts = existing.split('\\s+');
+    Boolean alreadyPresent = false;
+    for (String part : parts) {
+      if (part.equals(decoration)) {
+        alreadyPresent = true;
+        break;
+      }
+    }
+    if (!alreadyPresent) {
+      props.put('text-decoration', existing + ' ' + decoration);
+    }
+  }
+
   public DocIntentStyle underline() {
-    props.put('text-decoration', 'underline');
+    addTextDecoration('underline');
     return this;
   }
 
   public DocIntentStyle strike() {
-    props.put('text-decoration', 'line-through');
+    addTextDecoration('line-through');
     return this;
   }
 

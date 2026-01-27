@@ -6,13 +6,7 @@ public class HeadingRenderer {
   ) {
     String tag = toTag(level);
 
-    DocIntentStyle baseStyle = null;
-    try {
-      baseStyle = state.resolveStyle('heading.' + level.name());
-    } catch (Exception e) {
-      // fallback to heading.H1 if not found
-      baseStyle = state.resolveStyle('heading.H1');
-    }
+    DocIntentStyle baseStyle = state.resolveStyle('heading.' + level.name());
 
     DocIntentSpacing spacing = state.resolveSpacing('heading.' + level.name());
 

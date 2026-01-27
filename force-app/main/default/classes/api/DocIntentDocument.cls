@@ -98,15 +98,10 @@ public class DocIntentDocument {
   public DocIntentDocument paragraph(String value) {
     ensureState();
 
-    DocIntentStyle baseStyle = null;
-    try {
-      baseStyle = state.resolveStyle('base.text');
-    } catch (Exception e) {
-      baseStyle = null;
-    }
-
+    // Intentionally rely on document.base styles and paragraph spacing
+    // rather than a non-existent 'base.text' style.
     DocIntentSpacing spacing = state.resolveSpacing('paragraph.base');
-    DocIntentStyle merged = state.mergeStyleAndSpacing(baseStyle, spacing);
+    DocIntentStyle merged = state.mergeStyleAndSpacing(null, spacing);
 
     state.addTag('p', merged, state.escape(value));
     return this;

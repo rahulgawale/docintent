@@ -48,8 +48,21 @@ public class TableRenderer {
     String value,
     DocIntentStyle style
   ) {
+    // Resolve the base cell style so that defaults (e.g., padding, borders)
+    // are still applied even when a custom style is provided.
+    // If cell.base is not defined, gracefully fall back to null.
+    DocIntentStyle baseStyle = null;
+    try {
+      baseStyle = state.resolveStyle('cell.base');
+    } catch (RenderException e) {
+      // cell.base is not defined; proceed with just the custom style
+    }
+
+    // First merge the caller-provided style on top of the base style,
+    // then apply spacing from the base cell definition.
+    DocIntentStyle effectiveStyle = state.mergeStyles(baseStyle, style);
     DocIntentSpacing spacing = state.resolveSpacing('cell.base');
-    DocIntentStyle merged = state.mergeStyleAndSpacing(style, spacing);
+    DocIntentStyle merged = state.mergeStyleAndSpacing(effectiveStyle, spacing);
     state.addTag('td', merged, state.escape(value));
   }
 }

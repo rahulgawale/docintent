@@ -10,7 +10,7 @@ Account acc = [
 ];
 
 // Define custom base styles for this document
-public class AccountReportStyles implements DocIntentBaseStyles {
+class AccountReportStyles implements DocIntentBaseStyles {
   private String border = '1px solid #909090';
 
   public Map<String, DocIntentStyle> styles() {
@@ -49,8 +49,6 @@ public class AccountReportStyles implements DocIntentBaseStyles {
 
 DocIntentDocument doc = DocIntentDocument.create()
   .withBaseStyles(new AccountReportStyles());
-
-String border = '1px solid #909090';
 
 // Build header
 doc.section(

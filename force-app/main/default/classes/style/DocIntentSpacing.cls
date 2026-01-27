@@ -83,6 +83,6 @@ public class DocIntentSpacing {
   }
 
   public Map<String, String> properties() {
-    return props;
+    return new Map<String, String>(props);
   }
 }
