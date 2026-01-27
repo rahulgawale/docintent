@@ -14,7 +14,10 @@ public class DocIntentStyle {
   }
 
   public DocIntentSpacing getSpacing() {
-    return spacingObj;
+    if (spacingObj == null) {
+      return null;
+    }
+    return spacingObj.mergeWith(null);
   }
 
   public DocIntentStyle set(String key, String value) {

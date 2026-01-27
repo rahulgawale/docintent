@@ -10,6 +10,15 @@ public class DocIntentSpacing {
     return new Map<String, String>(props);
   }
 
+  public DocIntentSpacing mergeWith(DocIntentSpacing other) {
+    DocIntentSpacing merged = new DocIntentSpacing();
+    merged.props.putAll(this.props);
+    if (other != null) {
+      merged.props.putAll(other.props);
+    }
+    return merged;
+  }
+
   // ===== Margin =====
 
   public DocIntentSpacing margin(String v) {
